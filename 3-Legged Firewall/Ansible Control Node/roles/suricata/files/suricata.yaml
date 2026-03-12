@@ -1,0 +1,19 @@
+af-packet:
+  - interface: enp0s8
+  - interface: enp0s17
+
+rule-files:
+  - suricata.rules
+ 
+outputs:
+  - fast:
+      enabled: yes
+      filename: fast.log
+      append: yes
+
+default-log-level: notice
+
+config:
+  profiling:
+    max:
+      detect-msg-size: 16384

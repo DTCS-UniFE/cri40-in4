@@ -1,0 +1,30 @@
+---
+- name: Enable all network interfaces
+  hosts: server-web, server-db, server-applications
+  become: yes
+  roles:
+    - enable_network_interfaces
+
+- name: Apply netplan configuration
+  hosts: server-web, server-db, server-applications
+  become: yes
+  roles:
+    - netplan_config
+
+- name: Configure iptables
+  hosts: server-web, server-db, server-applications
+  become: yes
+  roles:
+    - iptables
+
+- name: Configure database server
+  hosts: server-db
+  become: yes
+  roles:
+    - postgresql
+
+- name: Configure web server
+  hosts: server-web
+  become: yes
+  roles:
+    - nginx

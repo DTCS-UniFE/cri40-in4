@@ -1,0 +1,40 @@
+---
+# tasks file for nginx
+- name: "apt-get update"
+  apt:
+    update_cache: yes
+    cache_valid_time: 3600
+
+- name: "create /var/www/{{ server_name }} directory"
+  file:
+    path: /var/www/{{ server_name }}
+    state: directory
+    mode: '0755'
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+
+- name: "install nginx"
+  apt:
+    name: ['nginx']
+    state: latest
+
+- name: "copy the nginx config file"
+  template:
+    src: /etc/ansible/roles/nginx/templates/site.conf.j2
+    dest: /etc/nginx/sites-enabled/{{ server_name }}
+    owner: root
+    group: root
+    mode: '0644'
+
+- name: "copy the content of the website"
+  copy:
+    src: /etc/ansible/roles/nginx/files/
+    dest: /var/www/{{ server_name }}
+    owner: root
+    group: root
+    mode: '0644'
+
+- name: "restart the nginx"
+  service:
+    name: nginx
+    state: restarted

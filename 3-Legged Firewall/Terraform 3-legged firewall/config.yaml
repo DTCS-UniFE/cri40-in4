@@ -1,0 +1,125 @@
+# HOW TO SET UP YOUR NETWORKS
+
+# Each VM can attach to one or more of the networks below—just keep the NIC
+# numbers consistent (e.g., NIC 1 is always Host-Only, NIC 2 is NAT, etc.)
+# Note: To control the VMs with Ansible, every VM must include a Host-Only adapter
+
+# NIC 1 - vboxnet0 (or name of yout own Host-Only network), type: hostonly
+#   - By default the Host-Only  network  does not exist
+#   - Create it via: VirtualBox -> Tools -> Network -> Host-Only Networks -> Create -> Enable the DHCP server
+#   - depending on your system you will have a different name, in the example the hostonly natwerk is named vboxnet0, you need to replace this name with the name of your own network
+
+# NIC 2 - NAT
+#   - VirtualBox ≤ 7.0.24: simply indicate "type: nat" for the adapter; no additional setup is needed
+#   - VirtualBox > 7.0.24: first create a NAT Network. Open VirtualBox -> Tools -> Network -> NAT Networks -> Create -> enable the DHCP server 
+#     This lets the VM reach the Internet even when the NAT adapter is not the first one
+
+# NIC 3 - subnet_a, type: intnet (Internal Network)
+# NIC 4 - subnet_b, type: intnet (Internal Network)
+# NIC 5 - subnet_dmz, type: intnet (Internal Network)
+vms:
+  - name: internet-fw
+    image: "/home/samanta/Downloads/bionic-server-cloudimg-amd64-vagrant-20230607.0.1.box"
+    cpus: 1
+    memory: "512 mib"
+    network_adapters:
+      - type: hostonly
+        host_interface: "vboxnet0"
+        nic: 1
+      - type: nat
+        nic: 2
+      - type: intnet
+        nic: 3
+        intnet: subnet_a
+
+  - name: subnet_a-nginx
+    image: "/home/samanta/Downloads/bionic-server-cloudimg-amd64-vagrant-20230607.0.1.box"
+    cpus: 1
+    memory: "512 mib"
+    network_adapters:
+      - type: hostonly
+        host_interface: "vboxnet0"
+        nic: 1
+      - type: intnet
+        nic: 3
+        intnet: subnet_a
+
+  - name: subnet_b-vm-01
+    image: "/home/samanta/Downloads/bionic-server-cloudimg-amd64-vagrant-20230607.0.1.box"
+    cpus: 1
+    memory: "512 mib"
+    network_adapters:
+      - type: hostonly
+        host_interface: "vboxnet0"
+        nic: 1
+      - type: intnet
+        nic: 4
+        intnet: subnet_b
+
+  - name: internal-fw
+    image: "/home/samanta/Downloads/bionic-server-cloudimg-amd64-vagrant-20230607.0.1.box"
+    cpus: 1
+    memory: "512 mib"
+    network_adapters:
+      - type: hostonly
+        host_interface: "vboxnet0"
+        nic: 1
+      - type: nat
+        nic: 2
+      - type: intnet
+        nic: 3
+        intnet: subnet_a
+      - type: intnet
+        nic: 4
+        intnet: subnet_b
+      - type: intnet
+        nic: 5
+        intnet: subnet_dmz
+
+  - name: dmz-suricata
+    image: "/home/samanta/Downloads/bionic-server-cloudimg-amd64-vagrant-20230607.0.1.box"
+    cpus: 1
+    memory: "1024 mib"
+    network_adapters:
+      - type: hostonly
+        host_interface: "vboxnet0"
+        nic: 1
+      - type: intnet
+        nic: 5
+        intnet: subnet_dmz
+
+  - name: dmz-wazuh
+    image: "/home/samanta/Downloads/bionic-server-cloudimg-amd64-vagrant-20230607.0.1.box"
+    cpus: 1
+    memory: "512 mib"
+    network_adapters:
+      - type: hostonly
+        host_interface: "vboxnet0"
+        nic: 1
+      - type: intnet
+        nic: 5
+        intnet: subnet_dmz
+
+  - name: dmz-db
+    image: "/home/samanta/Downloads/bionic-server-cloudimg-amd64-vagrant-20230607.0.1.box"
+    cpus: 1
+    memory: "512 mib"
+    network_adapters:
+      - type: hostonly
+        host_interface: "vboxnet0"
+        nic: 1
+      - type: intnet
+        nic: 5
+        intnet: subnet_dmz
+
+  - name: dmz-honeypot
+    image: "/home/samanta/Downloads/bionic-server-cloudimg-amd64-vagrant-20230607.0.1.box"
+    cpus: 1
+    memory: "512 mib"
+    network_adapters:
+      - type: hostonly
+        host_interface: "vboxnet0"
+        nic: 1
+      - type: intnet
+        nic: 5
+        intnet: subnet_dmz

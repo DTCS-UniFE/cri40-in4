@@ -1,0 +1,24 @@
+---
+# tasks file for dhcp
+- name: "apt-get update"
+  apt:
+    update_cache: yes
+    cache_valid_time: 36000
+
+- name: "install dhcp"
+  apt:
+    name: ['isc-dhcp-server']
+    state: latest
+
+- name: "copy the dhcp config file"
+  templates:
+    src: /etc/ansible/roles/dhcp/files/dhcpd.conf
+    dest: /etc/dhcp/dhcpd.conf
+    owner: root
+    group: root
+    mode: '0644'
+
+- name: "restart the dhcp"
+  service:
+    name: isc-dhcp-server
+    state: restarted

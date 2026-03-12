@@ -1,0 +1,9 @@
+#subnet_a
+enp0s9_address: '172.16.0.1'
+
+#subnet_b
+enp0s10_address: '10.0.0.1'
+
+#subnet_dmz
+enp0s16_address: '10.10.0.1'
+

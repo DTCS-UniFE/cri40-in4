@@ -1,0 +1,21 @@
+#!/usr/bin/env python3
+import os
+
+print("Starting internet_fw...")
+os.system("VBoxManage startvm internet_fw --type headless")
+print("Starting subnet_a_nginx...")
+os.system("VBoxManage startvm subnet_a_nginx --type headless")
+print("Starting subnet_b_vm_01...")
+os.system("VBoxManage startvm subnet_b_vm_01 --type headless")
+print("Starting internal_fw_1...")
+os.system("VBoxManage startvm internal_fw_1 --type headless")
+print("Starting internal_fw_2...")
+os.system("VBoxManage startvm internal_fw_2 --type headless")
+print("Starting dmz-wazuh...")
+os.system("VBoxManage startvm dmz-wazuh --type headless")
+print("Starting dmz-suricata...")
+os.system("VBoxManage startvm dmz-suricata --type headless")
+print("Starting dmz-db...")
+os.system("VBoxManage startvm dmz-db --type headless")
+print("Starting dmz-honeypot...")
+os.system("VBoxManage startvm dmz-honeypot --type headless")

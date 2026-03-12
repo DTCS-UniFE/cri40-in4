@@ -1,0 +1,160 @@
+---
+- name: Installazione Suricata utilizzando PPA
+  hosts: dmz_suricata
+  roles:
+    - suricata
+  become: yes
+  tasks:
+    - name: Add Suricata PPA
+      apt_repository:
+        repo: "ppa:oisf/suricata-7.0"
+        state: present
+
+    - name: Update apt cache
+      apt:
+        update_cache: yes
+
+    - name: Installazione Suricata
+      apt:
+        name: suricata
+        state: present
+
+    - name: Riavvia suricata
+      systemd:
+        name: suricata
+        state: restarted
+
+    - name: Download Emerging Threats rules tar
+      get_url:
+        url: "https://rules.emergingthreats.net/open/suricata-{{ suricata_version }}/emerging.rules.tar.gz"
+        dest: "/tmp/emerging.rules.tar.gz"
+
+    - name: Verifica esistenza directory rules, altrimenti la crea
+      file:
+        path: "/etc/suricata/rules"
+        state: directory
+        mode: "0755"
+
+    - name: Estrazione Emerging Threats rules
+      unarchive:
+        src: "/tmp/emerging.rules.tar.gz"
+        dest: "/etc/suricata/rules"
+        remote_src: yes
+        extra_opts: [--strip-components=1]
+
+    - name: Delete file tar
+      file:
+        path: "/tmp/emerging.rules.tar.gz"
+        state: absent
+
+- name: Installazione PostgreSQL
+  hosts: dmz_db
+  become: true
+
+  tasks:
+    - name: Update apt package manager repositories
+      apt:
+        update_cache: yes
+
+    - name: Installazione PostgreSQL e dei suoi contrib package
+      apt:
+        name:
+          - postgresql
+          - postgresql-contrib
+        state: present
+
+    - name: Verifica che PostgreSQL service sia running ed enabled
+      systemd:
+        name: postgresql
+        state: started
+        enabled: yes
+
+- name: Installazione di Cowrie
+  hosts: dmz_honeypot
+  become: yes
+
+  tasks:
+    - name: Aggiornamento dei pacchetti disponibili
+      apt:
+        update_cache: yes
+        cache_valid_time: 3600
+
+    - name: Aggiornamento della cache di apt e installazione delle dipendenze necessarie
+      apt:
+        name: "{{ item }}"
+        state: present
+      loop:
+        - python3
+        - python3-pip
+        - python3-virtualenv
+        - python3-dev
+        - libssl-dev
+        - libffi-dev
+        - build-essential
+        - authbind
+
+    - name: Creazione dell'utente non privilegiato per Cowrie
+      user:
+        name: cowrie
+        system: yes
+        shell: /usr/sbin/nologin
+
+    - name: Clonazione del repository Cowrie
+      git:
+        repo: https://github.com/cowrie/cowrie.git
+        dest: /home/cowrie/cowrie
+        update: yes
+      become_user: cowrie
+
+    - name: Installazione di python3-venv
+      apt:
+        name: python3-venv
+        state: present
+
+    - name: Creazione dell'ambiente virtuale per Cowrie
+      command: python3 -m venv /home/cowrie/cowrie/cowrie-env
+      become_user: cowrie
+
+    - name: Copia il file di configurazione di Cowrie
+      copy:
+        src: /etc/ansible/roles/cowrie/templates/cowrie.cfg
+        dest: /home/cowrie/cowrie/cowrie-env/cowrie.cfg
+        owner: cowrie
+        group: cowrie
+        mode: '0644'
+      become_user: cowrie
+
+- hosts: dmz_wazuh
+  become: yes
+  tasks:
+    - name: Aggiungi il repository Wazuh
+      apt_repository:
+        repo: "deb https://packages.wazuh.com/4.x/apt/ stable main"
+        state: present
+        update_cache: yes
+
+    - name: Aggiungi la chiave GPG di Wazuh
+      apt_key:
+        url: https://packages.wazuh.com/key/GPG-KEY-WAZUH
+        state: present
+
+    - name: Aggiorna l'elenco dei pacchetti
+      apt:
+        update_cache: yes
+
+    - name: Installa Wazuh Dashboard e Manager
+      apt:
+        name: "{{ item }}"
+        state: present
+      loop:
+        - wazuh-dashboard
+        - wazuh-manager
+
+    - name: Avvia e abilita i servizi di Wazuh
+      systemd:
+        name: "{{ item }}"
+        enabled: yes
+        state: started
+      loop:
+        - wazuh-dashboard
+        - wazuh-manager

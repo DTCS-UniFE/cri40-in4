@@ -1,0 +1,21 @@
+#!/usr/bin/env python3
+import os
+
+print("Stopping internet_fw...")
+os.system("VBoxManage controlvm internet_fw poweroff || true")
+print("Stopping subnet_a_nginx...")
+os.system("VBoxManage controlvm subnet_a_nginx poweroff || true")
+print("Stopping subnet_b_vm_01...")
+os.system("VBoxManage controlvm subnet_b_vm_01 poweroff || true")
+print("Stopping internal_fw_1...")
+os.system("VBoxManage controlvm internal_fw_1 poweroff || true")
+print("Stopping internal_fw_2...")
+os.system("VBoxManage controlvm internal_fw_2 poweroff || true")
+print("Stopping dmz-wazuh...")
+os.system("VBoxManage controlvm dmz-wazuh poweroff || true")
+print("Stopping dmz-suricata...")
+os.system("VBoxManage controlvm dmz-suricata poweroff || true")
+print("Stopping dmz-db...")
+os.system("VBoxManage controlvm dmz-db poweroff || true")
+print("Stopping dmz-honeypot...")
+os.system("VBoxManage controlvm dmz-honeypot poweroff || true")

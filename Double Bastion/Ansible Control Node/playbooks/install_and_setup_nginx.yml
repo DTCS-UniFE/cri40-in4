@@ -1,0 +1,22 @@
+---
+- name: Install and Setup Nginx
+  hosts: subnet_a
+  become: yes
+  vars_files:
+    - /etc/ansible/roles/nginx/vars/nginx_vars.yml
+  tasks:
+    - name: "apt-get update"
+      apt:
+        update_cache: yes
+        cache_valid_time: 3600
+
+    - name: "installa nginx"
+      apt:
+        name: ['nginx']
+        state: latest
+
+    - name: "Start Nginx service"
+      service:
+        name: nginx
+        state: started
+        enabled: yes

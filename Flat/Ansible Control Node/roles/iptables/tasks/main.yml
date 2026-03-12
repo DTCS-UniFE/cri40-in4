@@ -1,0 +1,19 @@
+---
+- name: Install iptables-persistent
+  apt:
+    name: iptables-persistent
+    state: present
+
+- name: Copy iptables configuration script
+  copy:
+    src: iptables-config.sh
+    dest: /tmp/iptables-config.sh
+    mode: '0755'
+
+- name: Run iptables configuration script
+  shell: /tmp/iptables-config.sh
+  async: 60
+  poll: 0
+
+- name: Save iptables rules (iptables-persistent)
+  shell: /usr/sbin/netfilter-persistent save

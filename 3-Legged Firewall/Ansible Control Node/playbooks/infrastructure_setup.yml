@@ -1,0 +1,126 @@
+---
+- name: Installazione e configurazione DHCP
+  hosts: internal-fw
+  become: true
+  tasks:
+    - name: apt-get update
+      apt:
+        update_cache: yes
+    - name: install dhcp
+      apt:
+        name: ['isc-dhcp-server']
+        state: latest
+
+- name: Configura DHCP
+  hosts: internal-fw
+  become: true
+  tasks:
+    - name: copy dhcpd.conf to remote server
+      template:
+        src: /etc/ansible/roles/dhcp/templates/dhcpd.conf.j2
+        dest: /etc/dhcp/dhcpd.conf
+        mode: '0644'
+    - name: restart DHCP
+      service:
+        name: isc-dhcp-server
+        state: restarted
+
+- name: Assegna IP statico a internal-fw
+  hosts: internal
+  become: true
+  tasks:
+    - name: configura indirizzo IP statico
+      template:
+        src: /etc/ansible/roles/dhcp/templates/01-netcfg.yaml.j2
+        dest: /etc/netplan/01-netcfg.yaml
+      notify:
+        - apply netplan configuration
+  handlers:
+    - name: apply netplan configuration
+      command: sudo netplan apply
+
+- name: Attiva il forwarding
+  hosts: internal
+  become: true
+  tasks:
+    - name: set net.ipv4.ip_forward to 1
+      sysctl:
+        name: net.ipv4.ip_forward
+        value: 1
+        state: present
+      notify:
+        - Load sysctl settings
+  handlers:
+    - name: Load sysctl settings
+      shell: sysctl -p
+
+- name: Attiva tutte le interfacce di rete
+  hosts: internet, subnet_a, internal, dmz, subnet_b
+  become: true
+  tasks:
+    - name: Attiva tutte le interfacce di rete
+      command: ip link set dev {{ item }} up
+      with_items: "{{ ansible_interfaces }}"
+
+- name: Configura scheda di rete
+  hosts: subnet_b, internet, subnet_a, dmz
+  become: true
+  tasks:
+    - name: IP subnet assegnato dal server DHCP
+      template:
+        src: /etc/ansible/roles/dhcp/templates/01-netcfg-tutte.yaml.j2
+        dest: /etc/netplan/01-netcfg-all.yaml
+      notify:
+        - apply netplan configuration
+  handlers:
+    - name: apply netplan configuration
+      command: sudo netplan apply
+
+- name: Configura iptables su internet-fw
+  hosts: internet-fw
+  become: yes
+  tasks:
+    - name: Installa iptables-persistent
+      apt:
+        name: iptables-persistent
+        state: present
+
+    - name: Copia lo script di configurazione iptables
+      copy:
+        src: /etc/ansible/roles/iptables/files/internet-fw-iptables-config.sh
+        dest: /tmp/iptables-config.sh
+        mode: '0755'
+
+    - name: Esegui lo script iptables
+      command: /tmp/iptables-config.sh
+      async: 60
+      poll: 0
+
+    - name: Salva le regole iptables (iptables-persistent)
+      command: /usr/sbin/netfilter-persistent save
+      become: yes
+
+- name: Configura iptables su internal-fw
+  hosts: internal-fw
+  become: yes
+  tasks:
+    - name: Installa iptables-persistent
+      apt:
+        name: iptables-persistent
+        state: present
+
+    - name: Copia lo script di configurazione iptables
+      copy:
+        src: /etc/ansible/roles/iptables/files/iptables-config.sh
+        dest: /tmp/iptables-config.sh
+        mode: '0755'
+
+    - name: Esegui lo script iptables
+      command: /tmp/iptables-config.sh
+      async: 60
+      poll: 0
+
+    - name: Salva le regole iptables (iptables-persistent)
+      command: /usr/sbin/netfilter-persistent save
+      become: yes
+

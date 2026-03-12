@@ -1,0 +1,3 @@
+#vars file for nginx
+port_number: 8080
+server_name: nginx_static
