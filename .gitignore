@@ -1,1 +1,96 @@
+# =========================
+# OS / Editor
+# =========================
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+*~
+.vscode/
+.idea/
+
+# =========================
+# Python
+# =========================
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.log
 venv/
+.env/
+
+# =========================
+# Terraform
+# =========================
+.terraform/
+*.tfstate
+*.tfstate.*
+crash.log
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
+.terraform.lock.hcl
+
+# =========================
+# Ansible
+# =========================
+*.retry
+ansible.log
+
+# SSH keys (IMPORTANTE)
+id_rsa
+id_rsa.pub
+*.pem
+
+# =========================
+# Generated files (progetto)
+# =========================
+# Terraform generator outputs
+main.tf
+topology.png
+start_vms.py
+stop_vms.py
+
+# Cloud-init
+user_data
+
+# =========================
+# Logs & runtime
+# =========================
+*.log
+logs/
+tmp/
+*.tmp
+
+# =========================
+# Suricata / Cowrie / Wazuh logs
+# =========================
+/var/log/
+/etc/suricata/rules/*.log
+
+# Cowrie runtime
+cowrie-env/
+var/lib/cowrie/
+var/log/cowrie/
+
+# =========================
+# Database
+# =========================
+*.db
+*.sqlite3
+
+# =========================
+# Backup files
+# =========================
+*.bak
+*.old
+*.backup
+
+# =========================
+# Misc
+# =========================
+*.tar.gz
+*.zip
+*.gz
