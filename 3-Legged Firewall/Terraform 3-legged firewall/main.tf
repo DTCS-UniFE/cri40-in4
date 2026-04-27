@@ -9,7 +9,7 @@ terraform {
 
 resource "virtualbox_vm" "internet-fw" {
   name      = "internet-fw"
-  image     = "/home/samanta/Downloads/bionic-server-cloudimg-amd64-vagrant-20230607.0.1.box"
+  image     = "/home/in4/Scaricati/bionic-server-cloudimg-amd64-vagrant-20230607.0.1.box"
   cpus      = 1
   memory    = "512 mib"
   user_data = file("user_data")
@@ -22,7 +22,7 @@ resource "virtualbox_vm" "internet-fw" {
 
 resource "virtualbox_vm" "subnet_a-nginx" {
   name      = "subnet_a-nginx"
-  image     = "/home/samanta/Downloads/bionic-server-cloudimg-amd64-vagrant-20230607.0.1.box"
+  image     = "/home/in4/Scaricati/bionic-server-cloudimg-amd64-vagrant-20230607.0.1.box"
   cpus      = 1
   memory    = "512 mib"
   user_data = file("user_data")
@@ -35,7 +35,7 @@ resource "virtualbox_vm" "subnet_a-nginx" {
 
 resource "virtualbox_vm" "subnet_b-vm-01" {
   name      = "subnet_b-vm-01"
-  image     = "/home/samanta/Downloads/bionic-server-cloudimg-amd64-vagrant-20230607.0.1.box"
+  image     = "/home/in4/Scaricati/bionic-server-cloudimg-amd64-vagrant-20230607.0.1.box"
   cpus      = 1
   memory    = "512 mib"
   user_data = file("user_data")
@@ -48,7 +48,7 @@ resource "virtualbox_vm" "subnet_b-vm-01" {
 
 resource "virtualbox_vm" "internal-fw" {
   name      = "internal-fw"
-  image     = "/home/samanta/Downloads/bionic-server-cloudimg-amd64-vagrant-20230607.0.1.box"
+  image     = "/home/in4/Scaricati/bionic-server-cloudimg-amd64-vagrant-20230607.0.1.box"
   cpus      = 1
   memory    = "512 mib"
   user_data = file("user_data")
@@ -61,7 +61,7 @@ resource "virtualbox_vm" "internal-fw" {
 
 resource "virtualbox_vm" "dmz-suricata" {
   name      = "dmz-suricata"
-  image     = "/home/samanta/Downloads/bionic-server-cloudimg-amd64-vagrant-20230607.0.1.box"
+  image     = "/home/in4/Scaricati/bionic-server-cloudimg-amd64-vagrant-20230607.0.1.box"
   cpus      = 1
   memory    = "1024 mib"
   user_data = file("user_data")
@@ -74,7 +74,7 @@ resource "virtualbox_vm" "dmz-suricata" {
 
 resource "virtualbox_vm" "dmz-wazuh" {
   name      = "dmz-wazuh"
-  image     = "/home/samanta/Downloads/bionic-server-cloudimg-amd64-vagrant-20230607.0.1.box"
+  image     = "/home/in4/Scaricati/bionic-server-cloudimg-amd64-vagrant-20230607.0.1.box"
   cpus      = 1
   memory    = "512 mib"
   user_data = file("user_data")
@@ -87,7 +87,7 @@ resource "virtualbox_vm" "dmz-wazuh" {
 
 resource "virtualbox_vm" "dmz-db" {
   name      = "dmz-db"
-  image     = "/home/samanta/Downloads/bionic-server-cloudimg-amd64-vagrant-20230607.0.1.box"
+  image     = "/home/in4/Scaricati/bionic-server-cloudimg-amd64-vagrant-20230607.0.1.box"
   cpus      = 1
   memory    = "512 mib"
   user_data = file("user_data")
@@ -100,7 +100,7 @@ resource "virtualbox_vm" "dmz-db" {
 
 resource "virtualbox_vm" "dmz-honeypot" {
   name      = "dmz-honeypot"
-  image     = "/home/samanta/Downloads/bionic-server-cloudimg-amd64-vagrant-20230607.0.1.box"
+  image     = "/home/in4/Scaricati/bionic-server-cloudimg-amd64-vagrant-20230607.0.1.box"
   cpus      = 1
   memory    = "512 mib"
   user_data = file("user_data")

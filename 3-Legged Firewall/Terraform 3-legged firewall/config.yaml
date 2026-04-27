@@ -19,7 +19,7 @@
 # NIC 5 - subnet_dmz, type: intnet (Internal Network)
 vms:
   - name: internet-fw
-    image: "/home/samanta/Downloads/bionic-server-cloudimg-amd64-vagrant-20230607.0.1.box"
+    image: "/home/in4/Scaricati/bionic-server-cloudimg-amd64-vagrant-20230607.0.1.box"
     cpus: 1
     memory: "512 mib"
     network_adapters:
@@ -33,7 +33,7 @@ vms:
         intnet: subnet_a
 
   - name: subnet_a-nginx
-    image: "/home/samanta/Downloads/bionic-server-cloudimg-amd64-vagrant-20230607.0.1.box"
+    image: "/home/in4/Scaricati/bionic-server-cloudimg-amd64-vagrant-20230607.0.1.box"
     cpus: 1
     memory: "512 mib"
     network_adapters:
@@ -45,7 +45,7 @@ vms:
         intnet: subnet_a
 
   - name: subnet_b-vm-01
-    image: "/home/samanta/Downloads/bionic-server-cloudimg-amd64-vagrant-20230607.0.1.box"
+    image: "/home/in4/Scaricati/bionic-server-cloudimg-amd64-vagrant-20230607.0.1.box"
     cpus: 1
     memory: "512 mib"
     network_adapters:
@@ -57,7 +57,7 @@ vms:
         intnet: subnet_b
 
   - name: internal-fw
-    image: "/home/samanta/Downloads/bionic-server-cloudimg-amd64-vagrant-20230607.0.1.box"
+    image: "/home/in4/Scaricati/bionic-server-cloudimg-amd64-vagrant-20230607.0.1.box"
     cpus: 1
     memory: "512 mib"
     network_adapters:
@@ -77,7 +77,7 @@ vms:
         intnet: subnet_dmz
 
   - name: dmz-suricata
-    image: "/home/samanta/Downloads/bionic-server-cloudimg-amd64-vagrant-20230607.0.1.box"
+    image: "/home/in4/Scaricati/bionic-server-cloudimg-amd64-vagrant-20230607.0.1.box"
     cpus: 1
     memory: "1024 mib"
     network_adapters:
@@ -89,7 +89,7 @@ vms:
         intnet: subnet_dmz
 
   - name: dmz-wazuh
-    image: "/home/samanta/Downloads/bionic-server-cloudimg-amd64-vagrant-20230607.0.1.box"
+    image: "/home/in4/Scaricati/bionic-server-cloudimg-amd64-vagrant-20230607.0.1.box"
     cpus: 1
     memory: "512 mib"
     network_adapters:
@@ -101,7 +101,7 @@ vms:
         intnet: subnet_dmz
 
   - name: dmz-db
-    image: "/home/samanta/Downloads/bionic-server-cloudimg-amd64-vagrant-20230607.0.1.box"
+    image: "/home/in4/Scaricati/bionic-server-cloudimg-amd64-vagrant-20230607.0.1.box"
     cpus: 1
     memory: "512 mib"
     network_adapters:
@@ -113,7 +113,7 @@ vms:
         intnet: subnet_dmz
 
   - name: dmz-honeypot
-    image: "/home/samanta/Downloads/bionic-server-cloudimg-amd64-vagrant-20230607.0.1.box"
+    image: "/home/in4/Scaricati/bionic-server-cloudimg-amd64-vagrant-20230607.0.1.box"
     cpus: 1
     memory: "512 mib"
     network_adapters:

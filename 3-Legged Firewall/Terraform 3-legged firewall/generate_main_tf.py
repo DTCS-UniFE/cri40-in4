@@ -6,7 +6,7 @@ import networkx as nx
 import matplotlib.pyplot as plt
 
 CONFIG_PATH = "config.yaml"
-VAGRANT_BOX_DEFAULT = "/home/samanta/Downloads/bionic-server-cloudimg-amd64-vagrant-20230607.0.1.box"
+VAGRANT_BOX_DEFAULT = "/home/in4/Scaricati/bionic-server-cloudimg-amd64-vagrant-20230607.0.1.box"
 USER_DATA_PATH = "user_data"
 
 def load_yaml(file_path):

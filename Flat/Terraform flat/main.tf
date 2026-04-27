@@ -9,7 +9,7 @@ terraform {
 
 resource "virtualbox_vm" "server-web" {
   name      = "server-web"
-  image     = "/home/samanta/Downloads/bionic-server-cloudimg-amd64-vagrant-20230607.0.1.box"
+  image     = "/home/in4/Scaricati/bionic-server-cloudimg-amd64-vagrant-20230607.0.1.box"
   cpus      = 1
   memory    = "512 mib"
   user_data = file("user_data")
@@ -22,7 +22,7 @@ resource "virtualbox_vm" "server-web" {
 
 resource "virtualbox_vm" "server-db" {
   name      = "server-db"
-  image     = "/home/samanta/Downloads/bionic-server-cloudimg-amd64-vagrant-20230607.0.1.box"
+  image     = "/home/in4/Scaricati/bionic-server-cloudimg-amd64-vagrant-20230607.0.1.box"
   cpus      = 1
   memory    = "512 mib"
   user_data = file("user_data")
@@ -35,7 +35,7 @@ resource "virtualbox_vm" "server-db" {
 
 resource "virtualbox_vm" "server-applications" {
   name      = "server-applications"
-  image     = "/home/samanta/Downloads/bionic-server-cloudimg-amd64-vagrant-20230607.0.1.box"
+  image     = "/home/in4/Scaricati/bionic-server-cloudimg-amd64-vagrant-20230607.0.1.box"
   cpus      = 1
   memory    = "512 mib"
   user_data = file("user_data")
