@@ -39,6 +39,7 @@ override.tf.json
 *.retry
 ansible.log
 
+
 # SSH keys (IMPORTANTE)
 id_rsa
 id_rsa.pub
@@ -94,3 +95,9 @@ var/log/cowrie/
 *.tar.gz
 *.zip
 *.gz
+
+# =========================
+
+notes.md
+input.txt
+/3-Legged Firewall/Ansible Control Node/hosts
