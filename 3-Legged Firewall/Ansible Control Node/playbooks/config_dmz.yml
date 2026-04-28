@@ -73,15 +73,14 @@
   become: yes
 
   tasks:
-    - name: Aggiungi il repository Wazuh
-      apt_repository:
-        repo: 'deb https://packages.wazuh.com/4.x/apt/ stable main'
-        state: present
-        update_cache: yes
-
     - name: Aggiungi la chiave GPG di Wazuh
       apt_key:
         url: 'https://packages.wazuh.com/key/GPG-KEY-WAZUH'
+        state: present
+
+    - name: Aggiungi il repository Wazuh
+      apt_repository:
+        repo: 'deb https://packages.wazuh.com/4.x/apt/ stable main'
         state: present
 
     - name: Aggiorna l'elenco dei pacchetti
@@ -104,25 +103,50 @@
   become: yes
 
   tasks:
-    - name: Aggiornamento della cache di apt e installazione delle dipendenze necessarie
+    - name: Aggiorna cache apt
       apt:
-        name: "{{ item }}"
+        update_cache: yes
+        cache_valid_time: 0
+
+    - name: Pulisci eventuali metadati apt obsoleti
+      command: apt-get clean
+      changed_when: false
+
+    - name: Aggiorna di nuovo la cache apt
+      apt:
+        update_cache: yes
+        cache_valid_time: 0
+
+    - name: Installa dipendenze necessarie
+      apt:
+        name:
+          - python3
+          - python3-pip
+          - python3-venv
+          - python3-dev
+          - virtualenv
+          - git
+          - libssl-dev
+          - libffi-dev
+          - build-essential
+          - authbind
         state: present
-      loop:
-        - python3
-        - python3-pip
-        - python3-virtualenv
-        - python3-dev
-        - libssl-dev
-        - libffi-dev
-        - build-essential
-        - authbind
 
     - name: Creazione dell'utente non privilegiato per Cowrie
       user:
         name: cowrie
         system: yes
         shell: /usr/sbin/nologin
+        home: /home/cowrie
+        create_home: yes
+
+    - name: Crea directory base di Cowrie
+      file:
+        path: /home/cowrie
+        state: directory
+        owner: cowrie
+        group: cowrie
+        mode: '0755'
 
     - name: Clonazione del repository Cowrie
       git:
@@ -131,18 +155,15 @@
         update: yes
       become_user: cowrie
 
-    - name: Installazione di python3-venv
-      apt:
-        name: python3-venv
-        state: present
-
     - name: Creazione dell'ambiente virtuale per Cowrie
       command: python3 -m venv /home/cowrie/cowrie/cowrie-env
+      args:
+        creates: /home/cowrie/cowrie/cowrie-env/bin/activate
       become_user: cowrie
 
     - name: Copia il file di configurazione di Cowrie
       copy:
-        src: /etc/ansible/roles/cowrie/files/cowrie.cfg
+        src: ../roles/cowrie/files/cowrie.cfg
         dest: /home/cowrie/cowrie/cowrie-env/cowrie.cfg
         owner: cowrie
         group: cowrie
