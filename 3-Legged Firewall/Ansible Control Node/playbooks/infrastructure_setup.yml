@@ -1,4 +1,15 @@
 ---
+- name: Bootstrap rete
+  hosts: internet-fw:internal-fw
+  become: true
+  gather_facts: no
+  tasks:
+    - name: Attiva interfaccia NAT
+      command: ip link set enp0s8 up
+
+    - name: Ottieni IP via DHCP
+      command: dhclient enp0s8
+
 - name: Installazione e configurazione DHCP
   hosts: internal-fw
   become: true
@@ -17,7 +28,7 @@
   tasks:
     - name: copy dhcpd.conf to remote server
       template:
-        src: /etc/ansible/roles/dhcp/templates/dhcpd.conf.j2
+        src: ../roles/dhcp/templates/dhcpd.conf.j2
         dest: /etc/dhcp/dhcpd.conf
         mode: '0644'
     - name: restart DHCP
@@ -31,7 +42,7 @@
   tasks:
     - name: configura indirizzo IP statico
       template:
-        src: /etc/ansible/roles/dhcp/templates/01-netcfg.yaml.j2
+        src: ../roles/dhcp/templates/01-netcfg.yaml.j2
         dest: /etc/netplan/01-netcfg.yaml
       notify:
         - apply netplan configuration
@@ -68,7 +79,7 @@
   tasks:
     - name: IP subnet assegnato dal server DHCP
       template:
-        src: /etc/ansible/roles/dhcp/templates/01-netcfg-tutte.yaml.j2
+        src: ../roles/dhcp/templates/01-netcfg-tutte.yaml.j2
         dest: /etc/netplan/01-netcfg-all.yaml
       notify:
         - apply netplan configuration
@@ -80,6 +91,10 @@
   hosts: internet-fw
   become: yes
   tasks:
+    - name: Aggiorna cache apt
+      apt:
+        update_cache: yes
+
     - name: Installa iptables-persistent
       apt:
         name: iptables-persistent
@@ -87,8 +102,8 @@
 
     - name: Copia lo script di configurazione iptables
       copy:
-        src: /etc/ansible/roles/iptables/files/internet-fw-iptables-config.sh
-        dest: /tmp/iptables-config.sh
+        src: ../roles/iptables/files/internet-fw-iptables-config.sh
+        dest: /tmp/internet-fw-iptables-config.sh
         mode: '0755'
 
     - name: Esegui lo script iptables
@@ -96,14 +111,18 @@
       async: 60
       poll: 0
 
-    - name: Salva le regole iptables (iptables-persistent)
+    - name: Salva le regole iptables
       command: /usr/sbin/netfilter-persistent save
-      become: yes
+
 
 - name: Configura iptables su internal-fw
   hosts: internal-fw
   become: yes
   tasks:
+    - name: Aggiorna cache apt
+      apt:
+        update_cache: yes
+
     - name: Installa iptables-persistent
       apt:
         name: iptables-persistent
@@ -111,8 +130,8 @@
 
     - name: Copia lo script di configurazione iptables
       copy:
-        src: /etc/ansible/roles/iptables/files/iptables-config.sh
-        dest: /tmp/iptables-config.sh
+        src: ../roles/iptables/files/iptables-config.sh
+        dest: /tmp/internal-fw-iptables-config.sh
         mode: '0755'
 
     - name: Esegui lo script iptables
@@ -120,7 +139,6 @@
       async: 60
       poll: 0
 
-    - name: Salva le regole iptables (iptables-persistent)
+    - name: Salva le regole iptables
       command: /usr/sbin/netfilter-persistent save
-      become: yes
 
