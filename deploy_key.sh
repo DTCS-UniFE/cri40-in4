@@ -1,6 +1,21 @@
 #!/usr/bin/env bash
 
-# Script per copiare la chiave pubblica su tutte le macchine elencate in un file di input
+# Script per copiare la chiave pubblica su tutte le macchine elencate in un file di input (creato con l'output di terraform apply).
+# Il file di input deve contenere righe con il formato:
+# <nome_macchina>_hostonly_ip = "<indirizzo_ip>"
+# Esempio di file di input:
+#
+# dmz-db_hostonly_ip = "192.168.56.xxx"
+# dmz-honeypot_hostonly_ip = "192.168.56.xxx"
+# dmz-suricata_hostonly_ip = "192.168.56.xxx"
+# dmz-wazuh_hostonly_ip = "192.168.56.xxx"
+# internal-fw_hostonly_ip = "192.168.56.xxx"
+# internet-fw_hostonly_ip = "192.168.56.xxx"
+# subnet_a-nginx_hostonly_ip = "192.168.56.xxx"
+# subnet_b-vm-01_hostonly_ip = "192.168.56.xxx"
+
+# Esempio di utilizzo:
+#   ./deploy_key.sh input.txt
 
 set -euo pipefail
 
