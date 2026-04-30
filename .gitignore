@@ -100,4 +100,5 @@ var/log/cowrie/
 
 notes.md
 input.txt
+ip_list.txt
 /3-Legged Firewall/Ansible Control Node/hosts
