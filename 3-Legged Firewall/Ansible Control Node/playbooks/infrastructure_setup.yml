@@ -107,7 +107,7 @@
         mode: '0755'
 
     - name: Esegui lo script iptables
-      command: /tmp/iptables-config.sh
+      command: /tmp/internet-fw-iptables-config.sh
       async: 60
       poll: 0
 
@@ -135,10 +135,9 @@
         mode: '0755'
 
     - name: Esegui lo script iptables
-      command: /tmp/iptables-config.sh
+      command: /tmp/internal-fw-iptables-config.sh
       async: 60
       poll: 0
 
     - name: Salva le regole iptables
       command: /usr/sbin/netfilter-persistent save
-

@@ -20,7 +20,7 @@
 
 - name: "copy the nginx config file"
   template:
-    src: /etc/ansible/roles/nginx/templates/site.conf.j2
+    src: site.conf.j2
     dest: /etc/nginx/sites-enabled/{{ server_name }}
     owner: root
     group: root
@@ -28,8 +28,8 @@
 
 - name: "copy the content of the website"
   copy:
-    src: /etc/ansible/roles/nginx/files/
-    dest: /var/www/{{ server_name }}
+    src: files/
+    dest: /var/www/{{ server_name }}/
     owner: root
     group: root
     mode: '0644'

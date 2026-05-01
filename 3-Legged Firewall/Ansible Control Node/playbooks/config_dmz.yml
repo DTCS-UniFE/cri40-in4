@@ -1,15 +1,10 @@
 ---
-- name: Installazione Suricata utilizzando PPA
+- name: Installazione Suricata
   hosts: dmz-suricata
-  roles:
-    - suricata
   become: yes
+  vars:
+    suricata_version: "7.0.3"
   tasks:
-    - name: Add Suricata PPA
-      apt_repository:
-        repo: "ppa:oisf/suricata-7.0"
-        state: present
-
     - name: Update apt cache
       apt:
         update_cache: yes
@@ -23,6 +18,7 @@
       systemd:
         name: suricata
         state: restarted
+        enabled: yes
 
     - name: Download Emerging Threats rules tar
       get_url:
