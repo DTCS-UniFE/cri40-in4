@@ -41,7 +41,7 @@ fi
 
     echo
     echo "[subnet_b]"
-    echo "subnet_b-vm_01"
+    echo "subnet_b-vm-01"
 
     echo
     echo "[dmz]"
